@@ -1,4 +1,4 @@
-package co.flock;
+package co.flock.main;
 
 /**
  * Hello world!
