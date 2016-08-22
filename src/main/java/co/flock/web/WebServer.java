@@ -26,7 +26,7 @@ public class WebServer {
     private void start() {
         try {
 
-            WebAppContext appContext = new WebAppContext(server, "mnp", "/");
+            WebAppContext appContext = new WebAppContext(server, "poker", "/");
 
             final RequestLogHandler requestLogHandler = new RequestLogHandler();
             appContext.addHandler(requestLogHandler);

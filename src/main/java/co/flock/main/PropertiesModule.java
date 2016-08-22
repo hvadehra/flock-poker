@@ -9,18 +9,17 @@ import com.google.inject.name.Names;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import static java.lang.String.format;
 
 
 public class PropertiesModule extends AbstractModule {
-    private static Logger log = LoggerFactory.getLogger(PropertiesModule.class.getCanonicalName());
+    private static Logger log = Logger.getLogger(PropertiesModule.class.getCanonicalName());
 
     @Override
     protected final void configure() {
