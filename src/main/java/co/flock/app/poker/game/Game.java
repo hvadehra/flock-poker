@@ -23,7 +23,7 @@ public class Game {
 
     private final Logger log = LoggerFactory.getLogger(Game.class.getCanonicalName());
 
-    private final FlockApiClientWrapper flockApiClient = new FlockApiClientWrapper();
+    private final FlockApiClientWrapper flockApiClient;
     private final String creatorId;
     private final String creatorToken;
     private final String gameId;
@@ -37,7 +37,8 @@ public class Game {
     private int currentBet;
     private int pot;
 
-    public Game(String creatorId, String creatorToken, String gameId, List<Player> players) throws Exception {
+    public Game(FlockApiClientWrapper flockApiClient, String creatorId, String creatorToken, String gameId, List<Player> players) throws Exception {
+        this.flockApiClient = flockApiClient;
         this.creatorToken = creatorToken;
         this.creatorId = creatorId;
         this.gameId = gameId;
@@ -60,7 +61,7 @@ public class Game {
                 new Player("p3", "f3", "l3"),
                 new Player("p4", "f4", "l4")
         );
-        Game game = new Game("p1", "token", "1", p);
+        Game game = new Game(new FlockApiClientWrapper(null), "p1", "token", "1", p);
 
         game.call("p2");
         game.call("p3");
@@ -133,13 +134,15 @@ public class Game {
         }
     }
 
-    private void distributeCards() {
+    private void distributeCards() throws Exception {
         List<Card> shuffledDeck = Card.getShuffledDeck();
         for (Player player : players) {
             player.cards = Lists.newArrayList(
                     shuffledDeck.remove(0),
                     shuffledDeck.remove(0)
             );
+            player.exposeCards();
+            flockApiClient.sendSelfMessage(player.id, "Your cards: " + player.cards);
         }
         communityCards = Lists.newArrayList(
                 shuffledDeck.remove(0),
