@@ -2,12 +2,15 @@ package co.flock.app.poker.game;
 
 import co.flock.app.poker.FlockApiClientWrapper;
 import co.flock.app.poker.UserStore;
+import co.flock.www.model.PublicProfile;
 import co.flock.www.model.flockevents.SlashCommand;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import java.util.Map;
+
+import static co.flock.app.poker.game.Game.initPlayers;
 
 /**
  * Created by hemanshu.v on 8/23/16.
@@ -35,18 +38,36 @@ public class GameManager {
         String command = args[0].toLowerCase();
         try {
             if (command.equals("start")) {
-                Game game = games.get(gameId);
-                if (game != null) {
-                    throw new RuntimeException("Game already started");
-                } else {
-                    games.put(gameId, new Game());
-                    flockApiClient.sendMessage(userToken, gameId, "Game started");
-                }
-            } else if (command.equals("raise")) {
-
+                startGame(userId, userToken, gameId);
+            } else if (command.equals("end")) {
+                Game game = getGame(gameId);
+                game.end(userId);
+                games.remove(gameId);
+            } else if (command.equals("call")) {
+                getGame(gameId).call(userId);
+            } else if (command.equals("quit")) {
+                getGame(gameId).quit(userId);
             }
         } catch (Throwable t) {
             flockApiClient.sendError(userToken, gameId, t);
+        }
+    }
+
+    private Game getGame(String gameId) {
+        Game game = games.get(gameId);
+        if (game == null) {
+            throw new RuntimeException("No game in progress");
+        }
+        return game;
+    }
+
+    private void startGame(String userId, String userToken, String gameId) throws Exception {
+        if (games.containsKey(gameId)) {
+            throw new RuntimeException("Game already in progress");
+        } else {
+            PublicProfile[] groupMembers = flockApiClient.getGroupMembers(userToken, gameId);
+            Game game = new Game(userId, userToken, gameId, initPlayers(groupMembers));
+            games.put(gameId, game);
         }
     }
 }

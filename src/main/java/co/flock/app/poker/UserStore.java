@@ -11,13 +11,24 @@ import java.util.Map;
 @Singleton
 public class UserStore {
 
-    private final Map<String, String> store = Maps.newHashMap();
+    private final Map<String, User> store = Maps.newHashMap();
 
     public void registerUser(String userId, String userToken) {
-        store.put(userId, userToken);
+        store.put(userId, new User(userId, userToken));
     }
 
     public String getToken(String userId) {
-        return store.get(userId);
+        return store.get(userId).userToken;
+    }
+
+    private class User {
+        private final String userId;
+        private final String userToken;
+
+        public User(String userId, String userToken) {
+
+            this.userId = userId;
+            this.userToken = userToken;
+        }
     }
 }
