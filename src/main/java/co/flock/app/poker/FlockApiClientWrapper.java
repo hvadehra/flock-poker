@@ -4,8 +4,10 @@ import co.flock.www.FlockApiClient;
 import co.flock.www.model.PublicProfile;
 import co.flock.www.model.messages.FlockMessage;
 import co.flock.www.model.messages.Message;
+import co.flock.www.model.messages.SendAs;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,10 +23,13 @@ public class FlockApiClientWrapper {
     private static final boolean PROD_ENV = false;
     private static final boolean DEBUG = false;
     private final UserStore userStore;
+    private final String appId;
 
     @Inject
-    public FlockApiClientWrapper(UserStore userStore) {
+    public FlockApiClientWrapper(UserStore userStore,
+                                 @Named("appId") String appId) {
         this.userStore = userStore;
+        this.appId = appId;
     }
 
     public void sendMessage(String userToken, String to, String msg) throws Exception {
@@ -66,6 +71,9 @@ public class FlockApiClientWrapper {
         }
         FlockApiClient client = getClient(userStore.getToken(userId));
         Message message = new Message(userId, msg);
+        message.setAppId(appId);
+        message.setSendAs(new SendAs("PokerBot", ""));
+//        message.setFrom(userId);
         FlockMessage flockMessage = new FlockMessage(message);
         try {
             client.chatSendMessage(flockMessage);
