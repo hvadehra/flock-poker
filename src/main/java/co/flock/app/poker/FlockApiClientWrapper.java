@@ -30,8 +30,8 @@ public class FlockApiClientWrapper {
     public void sendMessage(String userToken, String to, String msg) throws Exception {
         if (msg == null) return;
 
+        log.info(msg);
         if (DEBUG) {
-            log.info(msg);
             return;
         }
         FlockApiClient flockApiClient = getClient(userToken);
@@ -41,8 +41,8 @@ public class FlockApiClientWrapper {
     }
 
     public void sendError(String userToken, String to, Throwable t) throws Exception {
+        log.error("ERROR", t);
         if (DEBUG) {
-            log.error("ERROR", t);
             return;
         }
         FlockApiClient flockApiClient = getClient(userToken);
@@ -60,6 +60,10 @@ public class FlockApiClientWrapper {
     }
 
     public void sendSelfMessage(String userId, String msg) {
+        log.info(msg);
+        if (DEBUG) {
+            return;
+        }
         FlockApiClient client = getClient(userStore.getToken(userId));
         Message message = new Message(userId, msg);
         FlockMessage flockMessage = new FlockMessage(message);
