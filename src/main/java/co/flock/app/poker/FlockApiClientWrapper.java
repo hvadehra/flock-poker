@@ -21,7 +21,7 @@ public class FlockApiClientWrapper {
     private final Logger log = LoggerFactory.getLogger(FlockApiClientWrapper.class.getCanonicalName());
 
     private static final boolean PROD_ENV = false;
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private final UserStore userStore;
     private final String appId;
 
