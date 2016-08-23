@@ -15,8 +15,8 @@ import static java.util.Collections.shuffle;
 public class Card {
     private final Suit suit;
     private final Value number;
-    //    private boolean exposed = false;
-    private boolean exposed = true;
+    private boolean exposed = false;
+//    private boolean exposed = true;
 
     public Card(Suit suit, Value number) {
         this.suit = suit;
@@ -55,7 +55,7 @@ public class Card {
     }
 
     private enum Suit {
-        SPADE('s', 0), HEART('h', 1), DIAMOND('d', 2), CLUB('c', 3);
+        SPADE('♠', 0), HEART('♥', 1), DIAMOND('♦', 2), CLUB('♣', 3);
 
         private final char disp;
         public final int numeric;
