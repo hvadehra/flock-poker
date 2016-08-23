@@ -1,5 +1,8 @@
 package co.flock.app.poker.game;
 
+import ca.ualberta.cs.poker.Hand;
+import ca.ualberta.cs.poker.HandEvaluator;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -20,54 +23,15 @@ public class Card {
         this.number = number;
     }
 
-    @Override
-    public String toString() {
-        return exposed ? number.disp + suit.disp : "X";
-    }
+    public static Hand getBestHand(List<Card> hole, List<Card> community) {
+        List<Card> all = Lists.newArrayList();
+        all.addAll(hole);
+        all.addAll(community);
 
-    public void expose() {
-        this.exposed = true;
-    }
-
-    private enum Suit {
-        SPADE("s"), HEART("h"), DIAMOND("d"), CLUB("c");
-
-        private final String disp;
-
-        Suit(String disp) {
-
-            this.disp = disp;
-        }
-
-        @Override
-        public String toString() {
-            return disp;
-        }
-
-    }
-
-    private enum Value {
-        A("A"),
-        K("K"), Q("Q"), J("J"), T("T"),
-        Nine("9"),
-        Eight("8"),
-        Seven("7"),
-        Six("6"),
-        Five("5"),
-        Four("4"),
-        Three("3"), Two("2"), One("1");
-
-        private final String disp;
-
-        Value(String disp) {
-            this.disp = disp;
-        }
-
-        @Override
-        public String toString() {
-            return disp;
-        }
-
+        String cards = Joiner.on(" -").join(Lists.transform(all,
+                card -> new ca.ualberta.cs.poker.Card(card.number.numericVal, card.suit.numeric).toString()));
+        HandEvaluator handEvaluator = new HandEvaluator();
+        return handEvaluator.getBest5CardHand(new Hand(cards));
     }
 
     public static List<Card> getShuffledDeck() {
@@ -81,5 +45,60 @@ public class Card {
         return cards;
     }
 
+    @Override
+    public String toString() {
+        return exposed ? number.disp + suit.disp : "X";
+    }
+
+    public void expose() {
+        this.exposed = true;
+    }
+
+    private enum Suit {
+        SPADE('s', 0), HEART('h', 1), DIAMOND('d', 2), CLUB('c', 3);
+
+        private final char disp;
+        public final int numeric;
+
+        Suit(char disp, int numeric) {
+            this.disp = disp;
+            this.numeric = numeric;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(disp);
+        }
+
+    }
+
+    private enum Value {
+        A("A", 12),
+        K("K", 11),
+        Q("Q", 10),
+        J("J", 9),
+        T("T", 8),
+        Nine("9", 7),
+        Eight("8", 6),
+        Seven("7", 5),
+        Six("6", 4),
+        Five("5", 3),
+        Four("4", 2),
+        Three("3", 1),
+        Two("2", 0);
+
+        private final String disp;
+        private final int numericVal;
+
+        Value(String disp, int numericVal) {
+            this.disp = disp;
+            this.numericVal = numericVal;
+        }
+
+        @Override
+        public String toString() {
+            return disp;
+        }
+    }
 
 }

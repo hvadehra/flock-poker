@@ -22,7 +22,7 @@ public class FlockApiClientWrapper {
         if (msg == null) return;
 
         if (DEBUG) {
-            log.debug(msg);
+            log.info(msg);
             return;
         }
         FlockApiClient flockApiClient = getClient(userToken);

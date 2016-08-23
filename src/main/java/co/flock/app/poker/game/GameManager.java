@@ -45,6 +45,10 @@ public class GameManager {
                 games.remove(gameId);
             } else if (command.equals("call")) {
                 getGame(gameId).call(userId);
+            } else if (command.equals("check")) {
+                getGame(gameId).check(userId);
+            } else if (command.equals("raise")) {
+                getGame(gameId).raise(userId, Integer.parseInt(args[1]));
             } else if (command.equals("quit")) {
                 getGame(gameId).quit(userId);
             }
