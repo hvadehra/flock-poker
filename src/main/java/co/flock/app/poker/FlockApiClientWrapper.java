@@ -18,39 +18,42 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class FlockApiClientWrapper {
 
-    private final Logger log = LoggerFactory.getLogger(FlockApiClientWrapper.class.getCanonicalName());
-
     private static final boolean PROD_ENV = false;
     private static final boolean DEBUG = false;
+    private final Logger log = LoggerFactory.getLogger(FlockApiClientWrapper.class.getCanonicalName());
     private final UserStore userStore;
     private final String appId;
+    private final String botGuid;
+    private final FlockApiClient flockApiClient;
 
     @Inject
     public FlockApiClientWrapper(UserStore userStore,
-                                 @Named("app.id") String appId) {
+                                 @Named("app.id") String appId,
+                                 @Named("bot.id") String botGuid,
+                                 @Named("bot.token") String botToken) {
         this.userStore = userStore;
         this.appId = appId;
+        this.flockApiClient = new FlockApiClient(botToken, PROD_ENV);
+        this.botGuid = botGuid;
     }
 
-    public void sendMessage(String userToken, String to, String msg) throws Exception {
+    public void sendMessage(String to, String msg) throws Exception {
         if (msg == null) return;
-
         log.info(msg);
-        if (DEBUG) {
-            return;
-        }
-        FlockApiClient flockApiClient = getClient(userToken);
+        if (DEBUG) return;
         Message message = new Message(to, msg);
+        message.setAppId(appId);
+        message.setSendAs(new SendAs("PokerBot", ""));
+        message.setFrom(botGuid);
         FlockMessage flockMessage = new FlockMessage(message);
         flockApiClient.chatSendMessage(flockMessage);
     }
 
-    public void sendError(String userToken, String to, Throwable t) throws Exception {
+    public void sendError(String to, Throwable t) throws Exception {
         log.error("ERROR", t);
         if (DEBUG) {
             return;
         }
-        FlockApiClient flockApiClient = getClient(userToken);
         Message message = new Message(to, "ERROR: \n" + t.getMessage());
         FlockMessage flockMessage = new FlockMessage(message);
         flockApiClient.chatSendMessage(flockMessage);
@@ -62,23 +65,5 @@ public class FlockApiClientWrapper {
 
     private FlockApiClient getClient(String userToken) {
         return new FlockApiClient(userToken, PROD_ENV);
-    }
-
-    public void sendSelfMessage(String userId, String msg) {
-        log.info(msg);
-        if (DEBUG) {
-            return;
-        }
-        FlockApiClient client = getClient(userStore.getToken(userId));
-        Message message = new Message(userId, msg);
-        message.setAppId(appId);
-        message.setSendAs(new SendAs("PokerBot", ""));
-//        message.setFrom(userId);
-        FlockMessage flockMessage = new FlockMessage(message);
-        try {
-            client.chatSendMessage(flockMessage);
-        } catch (Exception e) {
-            log.error("Couldn't send self message for " + userId, e);
-        }
     }
 }

@@ -61,7 +61,7 @@ public class Game {
                 new Player("p3", "f3", "l3"),
                 new Player("p4", "f4", "l4")
         );
-        Game game = new Game(new FlockApiClientWrapper(null, "appid"), "p1", "token", "1", p);
+        Game game = new Game(new FlockApiClientWrapper(null, "appid", "botid", "bottoken"), "p1", "token", "1", p);
 
         game.call("p2");
         game.call("p3");
@@ -95,7 +95,7 @@ public class Game {
     private void fold(String userId) throws Exception {
         Player player = getPlayer(userId);
         if (player != null && player == actionOn) {
-            flockApiClient.sendMessage(creatorToken, gameId, player + " folded.");
+            flockApiClient.sendMessage(gameId, player + " folded.");
             moveAction(false);
             if (player == lastActor) {
                 lastActor = actionOn;
@@ -104,7 +104,7 @@ public class Game {
             player.lastBet = 0;
             playersInHand.remove(player);
         } else {
-            flockApiClient.sendError(creatorToken, userId, new RuntimeException("Not your turn."));
+            flockApiClient.sendError(userId, new RuntimeException("Not your turn."));
         }
     }
 
@@ -112,11 +112,11 @@ public class Game {
         Player player = getPlayer(userId);
         if (player != null && player == actionOn) {
             int raiseAmount = player.raise(currentBet, raise);
-            flockApiClient.sendMessage(creatorToken, gameId, player + " raised to " + raiseAmount);
+            flockApiClient.sendMessage(gameId, player + " raised to " + raiseAmount);
             currentBet = raiseAmount;
             moveAction(true);
         } else {
-            flockApiClient.sendError(creatorToken, userId, new RuntimeException("Not your turn."));
+            flockApiClient.sendError(userId, new RuntimeException("Not your turn."));
         }
     }
 
@@ -124,13 +124,13 @@ public class Game {
         Player player = getPlayer(userId);
         if (player != null && player == actionOn) {
             if (currentBet == 0) {
-                flockApiClient.sendMessage(creatorToken, gameId, player + " checked.");
+                flockApiClient.sendMessage(gameId, player + " checked.");
                 moveAction(false);
             } else {
-                flockApiClient.sendMessage(creatorToken, player.id, "There is a bet in play. You can only call/raise/fold.");
+                flockApiClient.sendMessage(player.id, "There is a bet in play. You can only call/raise/fold.");
             }
         } else {
-            flockApiClient.sendError(creatorToken, userId, new RuntimeException("Not your turn."));
+            flockApiClient.sendError(userId, new RuntimeException("Not your turn."));
         }
     }
 
@@ -164,7 +164,7 @@ public class Game {
                 .append("\n\n").append("Action on ").append(actionOn)
                 .append(" (").append(currentBet - actionOn.lastBet).append(" to call)");
         ;
-        flockApiClient.sendMessage(creatorToken, creatorId, msg.toString());
+        flockApiClient.sendMessage(gameId, msg.toString());
     }
 
     private StringBuilder board() {
@@ -199,7 +199,7 @@ public class Game {
         handStartMsg = handStartMsg.append("\n").append(actionOn).append(" has posted the big blind");
         moveAction(true);
         currentBet = BIGBLINGAMT;
-        flockApiClient.sendMessage(creatorToken, gameId, handStartMsg.toString());
+        flockApiClient.sendMessage(gameId, handStartMsg.toString());
     }
 
     private void moveAction(boolean tookAction) throws Exception {
@@ -276,7 +276,7 @@ public class Game {
         String nameHand = HandEvaluator.nameHand(bestHand);
         showDownMsg.append("\n\n").append(winner).append(" wins with ")
                 .append(bestHand).append(" (").append(nameHand).append(")");
-        flockApiClient.sendMessage(creatorToken, gameId, showDownMsg.toString());
+        flockApiClient.sendMessage(gameId, showDownMsg.toString());
     }
 
     private int addBetsToPot() {
@@ -307,7 +307,7 @@ public class Game {
 
     public void end(String userId) throws Exception {
         if (userId.equals(creatorId)) {
-            flockApiClient.sendMessage(creatorToken, gameId, "game has been ended");
+            flockApiClient.sendMessage(gameId, "game has been ended");
         }
         throw new RuntimeException("Only game creator can end the game. Use /poker quit if you wish to leave the game");
     }
@@ -335,13 +335,13 @@ public class Game {
         if (player != null && player == actionOn) {
             if (currentBet > 0) {
                 int callAmount = player.call(currentBet);
-                flockApiClient.sendMessage(creatorToken, gameId, player + " called " + callAmount);
+                flockApiClient.sendMessage(gameId, player + " called " + callAmount);
                 moveAction(false);
             } else {
-                flockApiClient.sendMessage(creatorToken, player.id, "No bets place, you can only check/raise/fold.");
+                flockApiClient.sendMessage(player.id, "No bets place, you can only check/raise/fold.");
             }
         } else {
-            flockApiClient.sendError(creatorToken, userId, new RuntimeException("Not your turn."));
+            flockApiClient.sendError(userId, new RuntimeException("Not your turn."));
         }
     }
 

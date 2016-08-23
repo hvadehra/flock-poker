@@ -53,7 +53,7 @@ public class GameManager {
                 getGame(gameId).quit(userId);
             }
         } catch (Throwable t) {
-            flockApiClient.sendError(userToken, gameId, t);
+            flockApiClient.sendError(gameId, t);
         }
     }
 
