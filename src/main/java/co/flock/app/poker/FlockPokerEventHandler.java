@@ -5,9 +5,8 @@ import co.flock.www.FlockEventsHandler;
 import co.flock.www.model.flockevents.*;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by hemanshu.v on 8/23/16.
@@ -15,7 +14,7 @@ import java.util.logging.Logger;
 @Singleton
 public class FlockPokerEventHandler implements FlockEventsHandler {
 
-    private final Logger log = Logger.getLogger(FlockPokerEventHandler.class.getCanonicalName());
+    private final Logger log = LoggerFactory.getLogger(FlockPokerEventHandler.class.getCanonicalName());
 
     private final UserStore userStore;
     private final GameManager gameManager;
@@ -27,6 +26,7 @@ public class FlockPokerEventHandler implements FlockEventsHandler {
     }
 
     public void onAppInstall(AppInstall appInstall) {
+        log.info("Got app install for {} with token {}", appInstall.getUserId(), appInstall.getUserToken());
         userStore.registerUser(appInstall.getUserId(), appInstall.getUserToken());
     }
 
@@ -61,7 +61,7 @@ public class FlockPokerEventHandler implements FlockEventsHandler {
         try {
             gameManager.command(slashCommand);
         } catch (Throwable t) {
-            log.log(Level.SEVERE, "Could not handle slash command", t);
+            log.error("Could not handle slash command", t);
         }
     }
 
