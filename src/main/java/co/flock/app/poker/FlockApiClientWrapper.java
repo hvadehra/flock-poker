@@ -27,7 +27,7 @@ public class FlockApiClientWrapper {
 
     @Inject
     public FlockApiClientWrapper(UserStore userStore,
-                                 @Named("appId") String appId) {
+                                 @Named("app.id") String appId) {
         this.userStore = userStore;
         this.appId = appId;
     }
