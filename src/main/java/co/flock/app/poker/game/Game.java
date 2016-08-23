@@ -142,7 +142,7 @@ public class Game {
                     shuffledDeck.remove(0)
             );
             player.exposeCards();
-            flockApiClient.sendSelfMessage(player.id, "Your cards: " + player.cards);
+            flockApiClient.sendMessage(player.id, "Your cards: " + player.cards);
         }
         communityCards = Lists.newArrayList(
                 shuffledDeck.remove(0),
