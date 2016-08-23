@@ -61,7 +61,7 @@ public class Game {
                 new Player("p3", "f3", "l3"),
                 new Player("p4", "f4", "l4")
         );
-        Game game = new Game(new FlockApiClientWrapper(null), "p1", "token", "1", p);
+        Game game = new Game(new FlockApiClientWrapper(null, "appid"), "p1", "token", "1", p);
 
         game.call("p2");
         game.call("p3");
