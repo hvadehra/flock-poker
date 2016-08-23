@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <fileSets>
+        <fileSet>
+            <directory>target/classes</directory>
+            <outputDirectory>classes</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/scripts</directory>
+            <outputDirectory>/scripts</outputDirectory>
+            <filtered>true</filtered>
+        </fileSet>
+        <fileSet>
+            <directory>web</directory>
+            <outputDirectory>web</outputDirectory>
+        </fileSet>
+    </fileSets>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>libs</outputDirectory>
+            <scope>runtime</scope>
+        </dependencySet>
+    </dependencySets>
+</assembly>
