@@ -19,7 +19,7 @@ public class FlockApiClientWrapper {
     private final Logger log = LoggerFactory.getLogger(FlockApiClientWrapper.class.getCanonicalName());
 
     private static final boolean PROD_ENV = false;
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private final UserStore userStore;
 
     @Inject
@@ -59,10 +59,14 @@ public class FlockApiClientWrapper {
         return new FlockApiClient(userToken, PROD_ENV);
     }
 
-    public void sendSelfMessage(String userId, String msg) throws Exception {
+    public void sendSelfMessage(String userId, String msg) {
         FlockApiClient client = getClient(userStore.getToken(userId));
         Message message = new Message(userId, msg);
         FlockMessage flockMessage = new FlockMessage(message);
-        client.chatSendMessage(flockMessage);
+        try {
+            client.chatSendMessage(flockMessage);
+        } catch (Exception e) {
+            log.error("Couldn't send self message for " + userId, e);
+        }
     }
 }
