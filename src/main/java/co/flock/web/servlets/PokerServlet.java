@@ -1,6 +1,8 @@
 package co.flock.web.servlets;
 
+import co.flock.www.FlockEventsHandlerClient;
 import com.google.common.base.Joiner;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.servlet.ServletException;
@@ -11,13 +13,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Singleton
-public class MainServlet extends HttpServlet {
+public class PokerServlet extends HttpServlet {
+
+    private final FlockEventsHandlerClient flockEventsHandlerClient;
+
+    @Inject
+    public PokerServlet(FlockEventsHandlerClient flockEventsHandlerClient) {
+        this.flockEventsHandlerClient = flockEventsHandlerClient;
+    }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         try {
-            // do health check
+            flockEventsHandlerClient.Handle(req);
             successResponse(resp);
         } catch (Throwable t) {
             failureResponse(resp, t);
@@ -28,7 +37,7 @@ public class MainServlet extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("text/html");
         ServletOutputStream out = resp.getOutputStream();
-        out.println("Success!");
+        out.println("");
         out.flush();
     }
 

@@ -1,8 +1,8 @@
 package co.flock.web;
 
 
-import co.flock.web.servlets.MainServlet;
 import co.flock.web.servlets.PingServlet;
+import co.flock.web.servlets.PokerServlet;
 import com.google.inject.servlet.ServletModule;
 
 /**
@@ -13,6 +13,6 @@ public class WebModule extends ServletModule {
     @Override
     protected void configureServlets() {
         serve("/ping").with(PingServlet.class);
-        serve("/main").with(MainServlet.class);
+        serve("/poker").with(PokerServlet.class);
     }
 }
