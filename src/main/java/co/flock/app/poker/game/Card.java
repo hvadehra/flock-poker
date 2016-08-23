@@ -55,19 +55,19 @@ public class Card {
     }
 
     private enum Suit {
-        SPADE('♠', 0), HEART('♥', 1), DIAMOND('♦', 2), CLUB('♣', 3);
+        SPADE("s", 0), HEART("h", 1), DIAMOND("d", 2), CLUB("c", 3);
 
-        private final char disp;
+        private final String disp;
         public final int numeric;
 
-        Suit(char disp, int numeric) {
+        Suit(String disp, int numeric) {
             this.disp = disp;
             this.numeric = numeric;
         }
 
         @Override
         public String toString() {
-            return String.valueOf(disp);
+            return disp;
         }
 
     }
