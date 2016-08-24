@@ -75,7 +75,7 @@ public class GameManager {
             throw new RuntimeException("Game already in progress");
         } else {
             PublicProfile[] groupMembers = flockApiClient.getGroupMembers(userToken, gameId);
-            Game game = new Game(flockApiClient, userId, userToken, gameId, initPlayers(groupMembers, botId));
+            Game game = new Game(flockApiClient, userId, userToken, gameId, initPlayers(groupMembers));
             games.put(gameId, game);
         }
     }

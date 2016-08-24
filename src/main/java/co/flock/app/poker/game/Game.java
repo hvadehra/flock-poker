@@ -4,6 +4,7 @@ import ca.ualberta.cs.poker.Hand;
 import ca.ualberta.cs.poker.HandEvaluator;
 import co.flock.app.poker.FlockApiClientWrapper;
 import co.flock.www.model.PublicProfile;
+import co.flock.www.model.messages.Attachments.HtmlView;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ public class Game {
     private static final int STARTSTACK = 100;
     private static final int SMALLBLINDAMT = 1;
     private static final int BIGBLINGAMT = 2;
+    private String pathToImages = "http://";
 
     private final Logger log = LoggerFactory.getLogger(Game.class.getCanonicalName());
 
@@ -45,7 +47,7 @@ public class Game {
         nextHand();
     }
 
-    public static List<Player> initPlayers(PublicProfile[] groupMembers, String botId) {
+    public static List<Player> initPlayers(PublicProfile[] groupMembers) {
         List<Player> players = Lists.newArrayList();
         for (PublicProfile groupMember : groupMembers) {
             if (!"Bot".equalsIgnoreCase(groupMember.getLastName()))
@@ -142,7 +144,7 @@ public class Game {
                     shuffledDeck.remove(0)
             );
             player.exposeCards();
-            flockApiClient.sendMessage(player.id, "Your cards: " + player.cards);
+            flockApiClient.sendMessage(player.id, "Your cards: " + player.cards, getCardsHtml(player.cards));
         }
         communityCards = Lists.newArrayList(
                 shuffledDeck.remove(0),
@@ -151,6 +153,20 @@ public class Game {
                 shuffledDeck.remove(0),
                 shuffledDeck.remove(0)
         );
+    }
+
+    private HtmlView getCardsHtml(List<Card> cards) {
+        HtmlView html = new HtmlView();
+        html.setHeight(50);
+        html.setWidth(30);
+        String inline = "";
+        for (Card card : cards) {
+            String cardName = card.getImgName();
+            String cardUrl = "<img src=\"" + pathToImages + cardName + "\" width=30 height=50>";
+            inline = inline + cardUrl;
+        }
+        html.setInline(inline);
+        return html;
     }
 
     private void printGameState() throws Exception {

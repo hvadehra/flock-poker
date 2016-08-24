@@ -2,6 +2,9 @@ package co.flock.app.poker;
 
 import co.flock.www.FlockApiClient;
 import co.flock.www.model.PublicProfile;
+import co.flock.www.model.messages.Attachments.Attachment;
+import co.flock.www.model.messages.Attachments.HtmlView;
+import co.flock.www.model.messages.Attachments.View;
 import co.flock.www.model.messages.FlockMessage;
 import co.flock.www.model.messages.Message;
 import co.flock.www.model.messages.SendAs;
@@ -37,22 +40,34 @@ public class FlockApiClientWrapper {
     }
 
     public void sendMessage(String to, String msg) throws Exception {
+        sendMessage(to, msg, null);
+    }
+
+    public void sendMessage(String to, String msg, HtmlView html) throws Exception {
         if (msg == null) return;
         log.info(msg);
         Message message = new Message(to, msg);
-        constructMsgAndSend(message);
+        constructMsgAndSend(message, html);
     }
 
     public void sendError(String to, Throwable t) throws Exception {
         log.error("ERROR", t);
         Message message = new Message(to, "ERROR: \n" + t.getMessage());
-        constructMsgAndSend(message);
+        constructMsgAndSend(message, null);
     }
 
-    private void constructMsgAndSend(Message message) throws Exception {
+    private void constructMsgAndSend(Message message, HtmlView html) throws Exception {
         message.setAppId(appId);
         message.setSendAs(new SendAs("PokerBot", ""));
         message.setFrom(botGuid);
+        if (html != null) {
+            Attachment[] attachments = new Attachment[1];
+            attachments[0] = new Attachment();
+            View views = new View();
+            views.setHtml(html);
+            attachments[0].setViews(views);
+            message.setAttachments(attachments);
+        }
         FlockMessage flockMessage = new FlockMessage(message);
         flockApiClient.chatSendMessage(flockMessage);
     }

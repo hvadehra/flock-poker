@@ -54,8 +54,21 @@ public class Card {
         this.exposed = true;
     }
 
+    public String getImgName() {
+        String val = number.disp;
+        if (number == Value.T) val = "10";
+        if (number == Value.JACK ||
+                number == Value.QUEEN ||
+                number == Value.KING ||
+                number == Value.ACE) val = number.name();
+        if (number == Value.T) val = "10";
+        if (number == Value.T) val = "10";
+        if (number == Value.T) val = "10";
+        return val.toLowerCase() + "_of_" + suit.name().toLowerCase() + ".png";
+    }
+
     private enum Suit {
-        SPADE("s", 0), HEART("h", 1), DIAMOND("d", 2), CLUB("c", 3);
+        SPADES("s", 0), HEARTS("h", 1), DIAMONDS("d", 2), CLUBS("c", 3);
 
         private final String disp;
         public final int numeric;
@@ -73,10 +86,10 @@ public class Card {
     }
 
     private enum Value {
-        A("A", 12),
-        K("K", 11),
-        Q("Q", 10),
-        J("J", 9),
+        ACE("A", 12),
+        KING("K", 11),
+        QUEEN("Q", 10),
+        JACK("J", 9),
         T("T", 8),
         Nine("9", 7),
         Eight("8", 6),
