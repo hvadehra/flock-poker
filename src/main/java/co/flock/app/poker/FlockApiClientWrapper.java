@@ -40,16 +40,19 @@ public class FlockApiClientWrapper {
         if (msg == null) return;
         log.info(msg);
         Message message = new Message(to, msg);
-        message.setAppId(appId);
-        message.setSendAs(new SendAs("PokerBot", ""));
-        message.setFrom(botGuid);
-        FlockMessage flockMessage = new FlockMessage(message);
-        flockApiClient.chatSendMessage(flockMessage);
+        constructMsgAndSend(message);
     }
 
     public void sendError(String to, Throwable t) throws Exception {
         log.error("ERROR", t);
         Message message = new Message(to, "ERROR: \n" + t.getMessage());
+        constructMsgAndSend(message);
+    }
+
+    private void constructMsgAndSend(Message message) throws Exception {
+        message.setAppId(appId);
+        message.setSendAs(new SendAs("PokerBot", ""));
+        message.setFrom(botGuid);
         FlockMessage flockMessage = new FlockMessage(message);
         flockApiClient.chatSendMessage(flockMessage);
     }
