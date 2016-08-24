@@ -20,7 +20,6 @@ public class Game {
     private static final int SMALLBLINDAMT = 1;
     private static final int BIGBLINGAMT = 2;
 
-
     private final Logger log = LoggerFactory.getLogger(Game.class.getCanonicalName());
 
     private final FlockApiClientWrapper flockApiClient;
@@ -46,10 +45,11 @@ public class Game {
         nextHand();
     }
 
-    public static List<Player> initPlayers(PublicProfile[] groupMembers) {
+    public static List<Player> initPlayers(PublicProfile[] groupMembers, String botId) {
         List<Player> players = Lists.newArrayList();
         for (PublicProfile groupMember : groupMembers) {
-            players.add(new Player(groupMember));
+            if (!groupMember.getId().equals(botId))
+                players.add(new Player(groupMember));
         }
         return players;
     }

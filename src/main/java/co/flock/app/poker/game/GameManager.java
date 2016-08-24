@@ -7,6 +7,7 @@ import co.flock.www.model.flockevents.SlashCommand;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 import java.util.Map;
 
@@ -20,12 +21,16 @@ public class GameManager {
 
     private final UserStore userStore;
     private final FlockApiClientWrapper flockApiClient;
+    private final String botId;
     private final Map<String, Game> games = Maps.newHashMap();
 
     @Inject
-    public GameManager(UserStore userStore, FlockApiClientWrapper flockApiClient) {
+    public GameManager(UserStore userStore,
+                       FlockApiClientWrapper flockApiClient,
+                       @Named("bot.id") String botId) {
         this.userStore = userStore;
         this.flockApiClient = flockApiClient;
+        this.botId = botId;
     }
 
     public void command(SlashCommand slashCommand) throws Exception {
@@ -70,7 +75,7 @@ public class GameManager {
             throw new RuntimeException("Game already in progress");
         } else {
             PublicProfile[] groupMembers = flockApiClient.getGroupMembers(userToken, gameId);
-            Game game = new Game(flockApiClient, userId, userToken, gameId, initPlayers(groupMembers));
+            Game game = new Game(flockApiClient, userId, userToken, gameId, initPlayers(groupMembers, botId));
             games.put(gameId, game);
         }
     }
