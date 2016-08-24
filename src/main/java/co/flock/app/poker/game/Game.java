@@ -191,18 +191,22 @@ public class Game {
         pot = 0;
         actionOn = dealer;
         handStartMsg = handStartMsg.append("\n").append(actionOn).append(" is the Dealer");
-        moveAction(false);
+        moveAction(false, false);
         actionOn.call(1);
         handStartMsg = handStartMsg.append("\n").append(actionOn).append(" has posted the small blind");
-        moveAction(true);
+        moveAction(true, false);
         actionOn.call(2);
         handStartMsg = handStartMsg.append("\n").append(actionOn).append(" has posted the big blind");
-        moveAction(true);
+        moveAction(true, false);
         currentBet = BIGBLINGAMT;
         flockApiClient.sendMessage(gameId, handStartMsg.toString());
     }
 
     private void moveAction(boolean tookAction) throws Exception {
+        moveAction(tookAction, true);
+    }
+
+    private void moveAction(boolean tookAction, boolean printBoard) throws Exception {
         log.debug("Last actor {}", lastActor);
         log.debug("Moving action from {}", actionOn);
         if (tookAction)
@@ -222,7 +226,7 @@ public class Game {
         } else {
             actionOn = next;
         }
-        printGameState();
+        if (printBoard) printGameState();
     }
 
     private Player nextGameState() throws Exception {

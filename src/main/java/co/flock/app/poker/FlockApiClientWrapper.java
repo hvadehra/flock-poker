@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 public class FlockApiClientWrapper {
 
     private static final boolean PROD_ENV = false;
-    private static final boolean DEBUG = false;
     private final Logger log = LoggerFactory.getLogger(FlockApiClientWrapper.class.getCanonicalName());
     private final UserStore userStore;
     private final String appId;
@@ -40,7 +39,6 @@ public class FlockApiClientWrapper {
     public void sendMessage(String to, String msg) throws Exception {
         if (msg == null) return;
         log.info(msg);
-        if (DEBUG) return;
         Message message = new Message(to, msg);
         message.setAppId(appId);
         message.setSendAs(new SendAs("PokerBot", ""));
@@ -51,15 +49,13 @@ public class FlockApiClientWrapper {
 
     public void sendError(String to, Throwable t) throws Exception {
         log.error("ERROR", t);
-        if (DEBUG) {
-            return;
-        }
         Message message = new Message(to, "ERROR: \n" + t.getMessage());
         FlockMessage flockMessage = new FlockMessage(message);
         flockApiClient.chatSendMessage(flockMessage);
     }
 
     public PublicProfile[] getGroupMembers(String userToken, String groupId) throws Exception {
+        log.info("Fetching group members for {} with token {}", groupId, userToken);
         return getClient(userToken).getGroupMembers(groupId);
     }
 
