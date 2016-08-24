@@ -96,7 +96,8 @@ public class Game {
 
     private void fold(String userId) throws Exception {
         Player player = getPlayer(userId);
-        if (player != null && player == actionOn) {
+        if (creatorDebugMode(player) || (player != null && player == actionOn)) {
+            player = actionOn;
             flockApiClient.sendMessage(gameId, player + " folded.");
             moveAction(false);
             if (player == lastActor) {
@@ -112,7 +113,8 @@ public class Game {
 
     public void raise(String userId, int raise) throws Exception {
         Player player = getPlayer(userId);
-        if (player != null && player == actionOn) {
+        if (creatorDebugMode(player) || (player != null && player == actionOn)) {
+            player = actionOn;
             int raiseAmount = player.raise(currentBet, raise);
             flockApiClient.sendMessage(gameId, player + " raised to " + raiseAmount);
             currentBet = raiseAmount;
@@ -124,7 +126,8 @@ public class Game {
 
     public void check(String userId) throws Exception {
         Player player = getPlayer(userId);
-        if (player != null && player == actionOn) {
+        if (creatorDebugMode(player) || (player != null && player == actionOn)) {
+            player = actionOn;
             if (currentBet == 0) {
                 flockApiClient.sendMessage(gameId, player + " checked.");
                 moveAction(false);
@@ -353,9 +356,10 @@ public class Game {
 
     public void call(String userId) throws Exception {
         Player player = getPlayer(userId);
-        if (player != null && player == actionOn) {
+        if (creatorDebugMode(player) || (player != null && player == actionOn)) {
+            player = actionOn;
             if (currentBet > 0) {
-                int callAmount = player.call(currentBet);
+                int callAmount = actionOn.call(currentBet);
                 flockApiClient.sendMessage(gameId, player + " called " + callAmount);
                 moveAction(false);
             } else {
@@ -364,6 +368,11 @@ public class Game {
         } else {
             flockApiClient.sendError(userId, new RuntimeException("Not your turn."));
         }
+    }
+
+    private boolean creatorDebugMode(Player player) {
+        return player.id.equals(creatorId);
+//        return false;
     }
 
     private enum PlayerState {
