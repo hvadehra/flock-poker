@@ -48,7 +48,7 @@ public class Game {
     public static List<Player> initPlayers(PublicProfile[] groupMembers, String botId) {
         List<Player> players = Lists.newArrayList();
         for (PublicProfile groupMember : groupMembers) {
-            if (!groupMember.getLastName().equalsIgnoreCase("Bot"))
+            if (!"Bot".equalsIgnoreCase(groupMember.getLastName()))
                 players.add(new Player(groupMember));
         }
         return players;
