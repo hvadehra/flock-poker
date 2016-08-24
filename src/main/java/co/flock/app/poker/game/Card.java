@@ -55,16 +55,20 @@ public class Card {
     }
 
     public String getImgName() {
-        String val = number.disp;
-        if (number == Value.T) val = "10";
-        if (number == Value.JACK ||
-                number == Value.QUEEN ||
-                number == Value.KING ||
-                number == Value.ACE) val = number.name();
-        if (number == Value.T) val = "10";
-        if (number == Value.T) val = "10";
-        if (number == Value.T) val = "10";
-        return val.toLowerCase() + "_of_" + suit.name().toLowerCase() + ".png";
+        if (exposed) {
+            String val = number.disp;
+            if (number == Value.T) val = "10";
+            if (number == Value.JACK ||
+                    number == Value.QUEEN ||
+                    number == Value.KING ||
+                    number == Value.ACE) val = number.name();
+            if (number == Value.T) val = "10";
+            if (number == Value.T) val = "10";
+            if (number == Value.T) val = "10";
+            return val.toLowerCase() + "_of_" + suit.name().toLowerCase() + ".png";
+        } else {
+            return "face_down.png";
+        }
     }
 
     private enum Suit {

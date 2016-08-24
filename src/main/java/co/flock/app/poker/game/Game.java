@@ -20,7 +20,7 @@ public class Game {
     private static final int STARTSTACK = 100;
     private static final int SMALLBLINDAMT = 1;
     private static final int BIGBLINGAMT = 2;
-    private String pathToImages = "http://";
+    private String pathToImages = "http://olympus101.staging.use1b.aws.talk.to:34567/static/cards/";
 
     private final Logger log = LoggerFactory.getLogger(Game.class.getCanonicalName());
 
@@ -157,12 +157,12 @@ public class Game {
 
     private HtmlView getCardsHtml(List<Card> cards) {
         HtmlView html = new HtmlView();
-        html.setHeight(50);
-        html.setWidth(30);
+        html.setHeight(100);
+//        html.setWidth(30);
         String inline = "";
         for (Card card : cards) {
             String cardName = card.getImgName();
-            String cardUrl = "<img src=\"" + pathToImages + cardName + "\" width=30 height=50>";
+            String cardUrl = "<img src=\"" + pathToImages + cardName + "\" width=60 height=80 />";
             inline = inline + cardUrl;
         }
         html.setInline(inline);
@@ -174,13 +174,13 @@ public class Game {
         msg
                 .append(gameState.get())
                 .append("\n").append(stacks())
-                .append("\n").append(board())
+//                .append("\n").append(board())
                 .append("\n").append("Pot: ").append(pot)
                 .append("\n").append("Current bet ").append(currentBet)
                 .append("\n\n").append("Action on ").append(actionOn)
                 .append(" (").append(currentBet - actionOn.lastBet).append(" to call)");
         ;
-        flockApiClient.sendMessage(gameId, msg.toString());
+        flockApiClient.sendMessage(gameId, msg.toString(), getCardsHtml(communityCards));
     }
 
     private StringBuilder board() {
@@ -399,7 +399,7 @@ public class Game {
             return
 //                    "[" + super.hashCode() + "] " +
 //                    cards + " " +
-                            fn + " " + ln;
+                    fn;
         }
 
         public int getStack() {
