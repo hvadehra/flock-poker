@@ -200,6 +200,7 @@ public class Game {
         moveAction(true, false);
         currentBet = BIGBLINGAMT;
         flockApiClient.sendMessage(gameId, handStartMsg.toString());
+        printGameState();
     }
 
     private void moveAction(boolean tookAction) throws Exception {
