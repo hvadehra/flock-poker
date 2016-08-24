@@ -256,6 +256,7 @@ public class Game {
         currentBet = 0;
         if (gameState.get().equals(GameState.State.SHOWDOWN)) {
             showDown();
+            Thread.sleep(5000);
             nextHand();
             return null;
         } else if (gameState.get().equals(GameState.State.FLOP)) {

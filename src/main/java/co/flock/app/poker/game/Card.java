@@ -72,7 +72,7 @@ public class Card {
     }
 
     private enum Suit {
-        SPADES("s", 0), HEARTS("h", 1), DIAMONDS("d", 2), CLUBS("c", 3);
+        SPADES("s", 3), HEARTS("h", 2), DIAMONDS("d", 1), CLUBS("c", 0);
 
         private final String disp;
         public final int numeric;
