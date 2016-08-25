@@ -46,21 +46,27 @@ public class FlockApiClientWrapper {
 
     public void sendMessage(String to, String msg, HtmlView html) throws Exception {
         if (msg == null) return;
-        log.info(msg);
+        log.info("Sending to {} msg={} html={}", to, msg, html);
         Message message = new Message(to, msg);
-        constructMsgAndSend(to.startsWith("u") ? flockApiClient : backupClient, message, html);
+        constructMsgAndSend(to, message, html);
     }
 
     public void sendError(String to, Throwable t) throws Exception {
-        log.error("ERROR", t);
+        log.error("Sending ERROR to {}", to, t);
         Message message = new Message(to, "ERROR: \n" + t.getMessage());
-        constructMsgAndSend(to.startsWith("u") ? flockApiClient : backupClient, message, null);
+        constructMsgAndSend(to, message, null);
     }
 
-    private void constructMsgAndSend(FlockApiClient client, Message message, HtmlView html) throws Exception {
-        message.setAppId(appId);
-        message.setSendAs(new SendAs("PokerBot", ""));
-        message.setFrom(botGuid);
+    private void constructMsgAndSend(String to, Message message, HtmlView html) throws Exception {
+        FlockApiClient client;
+        if (to.startsWith("u")) {
+            client = flockApiClient;
+            message.setAppId(appId);
+            message.setSendAs(new SendAs("PokerBot", ""));
+            message.setFrom(botGuid);
+        } else {
+            client = backupClient;
+        }
         if (html != null) {
             Attachment[] attachments = new Attachment[1];
             attachments[0] = new Attachment();
