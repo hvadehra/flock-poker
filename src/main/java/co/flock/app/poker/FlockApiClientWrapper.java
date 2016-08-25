@@ -27,7 +27,7 @@ public class FlockApiClientWrapper {
     private final String appId;
     private final String botGuid;
     private final FlockApiClient flockApiClient;
-    private final FlockApiClient backupClient = new FlockApiClient("31e85346-9209-4620-bcb1-8b52689f4d69", PROD_ENV);
+    private final FlockApiClient backupClient = new FlockApiClient("a8012a8d-b1b0-4717-98e4-f7f6e2a7803c", PROD_ENV);
 
     @Inject
     public FlockApiClientWrapper(UserStore userStore,
