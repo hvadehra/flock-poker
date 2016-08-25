@@ -20,7 +20,7 @@ public class Game {
     private static final int STARTSTACK = 100;
     private static final int SMALLBLINDAMT = 1;
     private static final int BIGBLINGAMT = 2;
-    private String pathToImages = "http://olympus101.staging.use1b.aws.talk.to:34567/static/cards/";
+    private String pathToImages = "https://raw.githubusercontent.com/hvadehra/flock-poker/master/web/static/cards/";
 
     private final Logger log = LoggerFactory.getLogger(Game.class.getCanonicalName());
 
