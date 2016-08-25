@@ -55,6 +55,8 @@ public class FlockPokerEventHandler implements FlockEventsHandler {
     }
 
     public void onSlashCommand(SlashCommand slashCommand) {
+        log.debug("Got slash command: {} {} from {} {}", slashCommand.getCommand(), slashCommand.getText(),
+                slashCommand.getUserId(), slashCommand.getUserName());
         String command = slashCommand.getCommand();
         if (!command.equalsIgnoreCase("poker"))
             throw new RuntimeException("Invalid command");
