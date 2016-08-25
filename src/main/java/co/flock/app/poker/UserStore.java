@@ -16,7 +16,7 @@ public class UserStore {
 
     @Inject
     public UserStore() {
-        registerUser("u:rl9bixbr6fbiqiqf", "31e85346-9209-4620-bcb1-8b52689f4d69");
+        registerUser("u:wigyh6rwfchfghhw", "a8012a8d-b1b0-4717-98e4-f7f6e2a7803c");
     }
 
     public void registerUser(String userId, String userToken) {
