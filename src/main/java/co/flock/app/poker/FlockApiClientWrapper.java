@@ -27,6 +27,7 @@ public class FlockApiClientWrapper {
     private final String appId;
     private final String botGuid;
     private final FlockApiClient flockApiClient;
+    private final FlockApiClient backupClient = new FlockApiClient("31e85346-9209-4620-bcb1-8b52689f4d69", PROD_ENV);
 
     @Inject
     public FlockApiClientWrapper(UserStore userStore,
@@ -47,16 +48,16 @@ public class FlockApiClientWrapper {
         if (msg == null) return;
         log.info(msg);
         Message message = new Message(to, msg);
-        constructMsgAndSend(message, html);
+        constructMsgAndSend(to.startsWith("u") ? flockApiClient : backupClient, message, html);
     }
 
     public void sendError(String to, Throwable t) throws Exception {
         log.error("ERROR", t);
         Message message = new Message(to, "ERROR: \n" + t.getMessage());
-        constructMsgAndSend(message, null);
+        constructMsgAndSend(to.startsWith("u") ? flockApiClient : backupClient, message, null);
     }
 
-    private void constructMsgAndSend(Message message, HtmlView html) throws Exception {
+    private void constructMsgAndSend(FlockApiClient client, Message message, HtmlView html) throws Exception {
         message.setAppId(appId);
         message.setSendAs(new SendAs("PokerBot", ""));
         message.setFrom(botGuid);
@@ -69,7 +70,7 @@ public class FlockApiClientWrapper {
             message.setAttachments(attachments);
         }
         FlockMessage flockMessage = new FlockMessage(message);
-        flockApiClient.chatSendMessage(flockMessage);
+        client.chatSendMessage(flockMessage);
     }
 
     public PublicProfile[] getGroupMembers(String userToken, String groupId) throws Exception {
