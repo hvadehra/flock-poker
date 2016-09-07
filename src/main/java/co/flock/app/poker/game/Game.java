@@ -331,6 +331,7 @@ public class Game {
     public void end(String userId) throws Exception {
         if (userId.equals(creatorId)) {
             flockApiClient.sendMessage(gameId, "game has been ended");
+            return;
         }
         throw new RuntimeException("Only game creator can end the game. Use /poker quit if you wish to leave the game");
     }
