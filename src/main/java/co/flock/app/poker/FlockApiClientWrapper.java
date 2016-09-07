@@ -59,14 +59,14 @@ public class FlockApiClientWrapper {
 
     private void constructMsgAndSend(String to, Message message, HtmlView html) throws Exception {
         FlockApiClient client;
-        if (to.startsWith("u")) {
+//        if (to.startsWith("u")) {
             client = flockApiClient;
             message.setAppId(appId);
             message.setSendAs(new SendAs("PokerBot", ""));
             message.setFrom(botGuid);
-        } else {
-            client = backupClient;
-        }
+//        } else {
+//            client = backupClient;
+//        }
         if (html != null) {
             Attachment[] attachments = new Attachment[1];
             attachments[0] = new Attachment();
