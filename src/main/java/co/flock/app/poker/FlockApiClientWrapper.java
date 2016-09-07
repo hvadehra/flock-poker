@@ -25,6 +25,7 @@ public class FlockApiClientWrapper {
     private final Logger log = LoggerFactory.getLogger(FlockApiClientWrapper.class.getCanonicalName());
     private final UserStore userStore;
     private final String appId;
+    private final String botToken;
     private final String botGuid;
     private final FlockApiClient flockApiClient;
     private final FlockApiClient backupClient = new FlockApiClient("a8012a8d-b1b0-4717-98e4-f7f6e2a7803c", PROD_ENV);
@@ -36,6 +37,7 @@ public class FlockApiClientWrapper {
                                  @Named("bot.token") String botToken) {
         this.userStore = userStore;
         this.appId = appId;
+        this.botToken = botToken;
         this.flockApiClient = new FlockApiClient(botToken, PROD_ENV);
         this.botGuid = botGuid;
     }
@@ -48,16 +50,16 @@ public class FlockApiClientWrapper {
         if (msg == null) return;
         log.info("Sending to {} msg={} html={}", to, msg, html);
         Message message = new Message(to, msg);
-        constructMsgAndSend(to, message, html);
+        constructMsgAndSend(message, html);
     }
 
     public void sendError(String to, Throwable t) throws Exception {
         log.error("Sending ERROR to {}", to, t);
         Message message = new Message(to, "ERROR: \n" + t.getMessage());
-        constructMsgAndSend(to, message, null);
+        constructMsgAndSend(message, null);
     }
 
-    private void constructMsgAndSend(String to, Message message, HtmlView html) throws Exception {
+    private void constructMsgAndSend(Message message, HtmlView html) throws Exception {
         FlockApiClient client;
 //        if (to.startsWith("u")) {
             client = flockApiClient;
@@ -79,12 +81,9 @@ public class FlockApiClientWrapper {
         client.chatSendMessage(flockMessage);
     }
 
-    public PublicProfile[] getGroupMembers(String userToken, String groupId) throws Exception {
-        log.info("Fetching group members for {} with token {}", groupId, userToken);
-        return getClient(userToken).getGroupMembers(groupId);
+    public PublicProfile[] getGroupMembers(String groupId) throws Exception {
+        log.info("Fetching group members for {} with token {}", groupId, botToken);
+        return flockApiClient.getGroupMembers(groupId);
     }
 
-    private FlockApiClient getClient(String userToken) {
-        return new FlockApiClient(userToken, PROD_ENV);
-    }
 }

@@ -35,7 +35,6 @@ public class GameManager {
 
     public void command(SlashCommand slashCommand) throws Exception {
         String userId = slashCommand.getUserId();
-        String userToken = userStore.getToken(userId);
         String gameId = slashCommand.getChat();
         String params = slashCommand.getText();
 
@@ -43,7 +42,7 @@ public class GameManager {
         String command = args[0].toLowerCase();
         try {
             if (command.equals("start")) {
-                startGame(userId, userToken, gameId);
+                startGame(userId, gameId);
             } else if (command.equals("end")) {
                 Game game = getGame(gameId);
                 game.end(userId);
@@ -70,12 +69,12 @@ public class GameManager {
         return game;
     }
 
-    private void startGame(String userId, String userToken, String gameId) throws Exception {
+    private void startGame(String userId, String gameId) throws Exception {
         if (games.containsKey(gameId)) {
             throw new RuntimeException("Game already in progress");
         } else {
-            PublicProfile[] groupMembers = flockApiClient.getGroupMembers(userToken, gameId);
-            Game game = new Game(flockApiClient, userId, userToken, gameId, initPlayers(groupMembers));
+            PublicProfile[] groupMembers = flockApiClient.getGroupMembers(gameId);
+            Game game = new Game(flockApiClient, userId, gameId, initPlayers(groupMembers));
             games.put(gameId, game);
         }
     }

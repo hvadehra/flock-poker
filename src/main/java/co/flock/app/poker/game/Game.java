@@ -26,7 +26,6 @@ public class Game {
 
     private final FlockApiClientWrapper flockApiClient;
     private final String creatorId;
-    private final String creatorToken;
     private final String gameId;
     private final List<Player> players;
     private List<Card> communityCards;
@@ -38,9 +37,8 @@ public class Game {
     private int currentBet;
     private int pot;
 
-    public Game(FlockApiClientWrapper flockApiClient, String creatorId, String creatorToken, String gameId, List<Player> players) throws Exception {
+    public Game(FlockApiClientWrapper flockApiClient, String creatorId, String gameId, List<Player> players) throws Exception {
         this.flockApiClient = flockApiClient;
-        this.creatorToken = creatorToken;
         this.creatorId = creatorId;
         this.gameId = gameId;
         this.players = players;
@@ -63,7 +61,7 @@ public class Game {
                 new Player("p3", "f3", "l3"),
                 new Player("p4", "f4", "l4")
         );
-        Game game = new Game(new FlockApiClientWrapper(null, "appid", "botid", "bottoken"), "p1", "token", "1", p);
+        Game game = new Game(new FlockApiClientWrapper(null, "appid", "botid", "bottoken"), "p1", "1", p);
 
         game.call("p2");
         game.call("p3");
